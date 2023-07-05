@@ -12,14 +12,12 @@ def migrate_sensor(apps, schema_editor):
     # if we directly import it, it'll be the wrong version
     Sensor = apps.get_model("sensors", "Sensor")
     Node = apps.get_model("sensors", "Node")
-    db_alias = schema_editor.connection.alias
-    if db_alias != "default":
-        return
-    for sensor in Sensor.objects.using(db_alias).all():
-        node = Node.objects.using(db_alias).create(uid=sensor.uid,
-                                description=sensor.description,
-                                owner=sensor.owner,
-                                location=sensor.location)
+    for sensor in Sensor.objects.all():
+        print("sensor: {}".format(sensor.id))
+        node = Node.objects.create(uid=sensor.uid,
+                                   description=sensor.description,
+                                   owner=sensor.owner,
+                                   location=sensor.location)
         sensor.node = node
         sensor.save()
 
@@ -48,17 +46,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='node',
             name='location',
-            field=models.ForeignKey(to='sensors.SensorLocation'),
+            field=models.ForeignKey(to='sensors.SensorLocation',on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='node',
             name='owner',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL,on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='sensor',
             name='node',
-            field=models.ForeignKey(to='sensors.Node', blank=True, null=True),
+            field=models.ForeignKey(to='sensors.Node', blank=True, null=True,on_delete=models.CASCADE),
             preserve_default=False,
         ),
 

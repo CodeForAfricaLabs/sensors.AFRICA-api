@@ -81,6 +81,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema" 
 }
 
 TEMPLATES = [
@@ -201,7 +202,7 @@ sentry_sdk.init(
 
 # Put fenstaub migrations into sensorsafrica
 MIGRATION_MODULES = {
-    "sensors": "sensorsafrica.openstuttgart.feinstaub.sensors.migrations"
+    "sensors": "feinstaub.sensors.migrations"
 }
 
 NETWORKS_OWNER = os.getenv("NETWORKS_OWNER")
